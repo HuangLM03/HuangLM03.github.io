@@ -28,8 +28,18 @@
           
           <category> 文章效果展示 </category>
           
+          <category> 文章效果演示 </category>
+          
       </categories>
       
+      
+        <tags>
+            
+            <tag> 演示 </tag>
+            
+            <tag> 展示 </tag>
+            
+        </tags>
       
     </entry>
     
