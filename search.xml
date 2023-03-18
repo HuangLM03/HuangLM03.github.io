@@ -18,8 +18,8 @@
     
     <entry>
       <title>演示文稿</title>
-      <link href="/2022/03/07/%E6%BC%94%E7%A4%BA%E6%96%87%E7%A8%BF/"/>
-      <url>/2022/03/07/%E6%BC%94%E7%A4%BA%E6%96%87%E7%A8%BF/</url>
+      <link href="/2023/03/07/%E6%BC%94%E7%A4%BA%E6%96%87%E7%A8%BF/"/>
+      <url>/2023/03/07/%E6%BC%94%E7%A4%BA%E6%96%87%E7%A8%BF/</url>
       
         <content type="html"><![CDATA[<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Welcome to my blog!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       
