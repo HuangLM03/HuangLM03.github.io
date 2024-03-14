@@ -4,6 +4,46 @@
   
     
     <entry>
+      <title>OC-SVM</title>
+      <link href="/2024/03/14/OC-SVM/"/>
+      <url>/2024/03/14/OC-SVM/</url>
+      
+        <content type="html"><![CDATA[<h1 id="OC-SVM"><a href="#OC-SVM" class="headerlink" title="OC-SVM"></a><a href="https://cs.gmu.edu/~carlotta/teaching/CS-688-f10/readings/oneSVM.pdf">OC-SVM</a></h1><ul><li>一类支持向量机，是支持向量机的变体，常用于异常检测。</li><li></li></ul><h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><ul><li>解决传统监督学习方法在异常检测问题上的局限性。</li><li>传统的监督学习方法需要大量标记好的数据，即正常样本和异常样本都需要有明确的标签。然而，在异常检测中，异常样本很难获得，甚至是未知的。如果使用SVM训练，就会导致模型对异常样本检测错判率较高。</li><li>OC-SVM只需要正常样本的标签，其基本思想是通过学习正常样本的特征来构建一个超平面，将正常样本和异常样本分离开来。</li></ul><h2 id="算法关键步骤"><a href="#算法关键步骤" class="headerlink" title="算法关键步骤"></a>算法关键步骤</h2><p>1.选择适当的核函数以及相关的参数（核函数的参数、软边界、惩罚参数）。原文中主要提到了线性核还有高斯核，后者的正确率相对而言更高。</p><p><img src="https://cdn.jsdelivr.net/gh/HuangLM03/BlogImg@main/20240314192859.png" alt="高斯核"><br><img src="https://cdn.jsdelivr.net/gh/HuangLM03/BlogImg@main/20240314192937.png"><br>2.优化目标函数</p><ul><li>该函数旨在找到一个超平面，将正常样本和异常样本分离开来。</li></ul><p>3.求解超平面</p><ul><li>确定超平面的参数（法向量、偏置量）和惩罚参数</li><li>可以使用优化算法如梯度下降等来求解支持向量机的对偶问题或原始问题。</li></ul><p>4.模型评估</p><ul><li>交叉验证or验证集</li><li>评估指标：误判率、准确率等</li></ul><h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><ul><li>通常只包含正常样本，样本被表示为向量</li><li>核函数和参数</li></ul><h2 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h2><ul><li>超平面的参数</li></ul><h2 id="数学原理"><a href="#数学原理" class="headerlink" title="数学原理"></a><a href="https://blog.csdn.net/comli_cn/article/details/102809384?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171041646316800188562425%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171041646316800188562425&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-102809384-null-null.142%5Ev99%5Epc_search_result_base1&utm_term=%E4%B8%80%E7%B1%BB%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA&spm=1018.2226.3001.4187">数学原理</a></h2><p><img src="https://cdn.jsdelivr.net/gh/HuangLM03/BlogImg@main/20240314205731.png"><br><img src="https://cdn.jsdelivr.net/gh/HuangLM03/BlogImg@main/20240314205805.png"><br><img src="https://cdn.jsdelivr.net/gh/HuangLM03/BlogImg@main/20240314210223.png"><br><img src="https://cdn.jsdelivr.net/gh/HuangLM03/BlogImg@main/20240314210243.png"></p><h2 id="简单实现"><a href="#简单实现" class="headerlink" title="简单实现"></a>简单实现</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> svm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成正常样本</span></span><br><span class="line">normal_samples = np.random.randn(<span class="number">100</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成异常样本</span></span><br><span class="line">outliers = np.random.uniform(low=-<span class="number">4</span>, high=<span class="number">4</span>, size=(<span class="number">20</span>, <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并正常样本和异常样本</span></span><br><span class="line">X = np.vstack((normal_samples, outliers))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练One-Class SVM模型</span></span><br><span class="line">clf = svm.OneClassSVM(nu=<span class="number">0.05</span>, kernel=<span class="string">&quot;rbf&quot;</span>, gamma=<span class="number">0.1</span>)</span><br><span class="line">clf.fit(X)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预测样本是否为异常</span></span><br><span class="line">y_pred = clf.predict(X)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可视化结果</span></span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], c=y_pred, cmap=<span class="string">&#x27;viridis&#x27;</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;One-Class SVM for Outlier Detection&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 机器学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习 </tag>
+            
+            <tag> OC-SVM </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>职业生涯规划书</title>
+      <link href="/2023/11/05/%E8%81%8C%E4%B8%9A%E7%94%9F%E6%B6%AF%E8%A7%84%E5%88%92%E4%B9%A6/"/>
+      <url>/2023/11/05/%E8%81%8C%E4%B8%9A%E7%94%9F%E6%B6%AF%E8%A7%84%E5%88%92%E4%B9%A6/</url>
+      
+        <content type="html"><![CDATA[<h1 id="职业生涯规划书"><a href="#职业生涯规划书" class="headerlink" title="职业生涯规划书"></a>职业生涯规划书</h1><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol><li>职业目标<br>1.1 职业目标起源<br>1.2 职业世界探索<br>1.3 适配性分析</li><li>成长行动<br>2.1 目标职业的能力要求<br>2.2 提升能力的成长实践</li><li>成长计划<br>3.1 未来成长的行动计划<br>3.2 计划的评估调整</li></ol><h2 id="1-职业目标"><a href="#1-职业目标" class="headerlink" title="1. 职业目标"></a>1. 职业目标</h2><h3 id="1-1-职业目标起源"><a href="#1-1-职业目标起源" class="headerlink" title="1.1 职业目标起源"></a>1.1 职业目标起源</h3><p>作为一名中国大学生，专业为软件工程，职业生涯规划是迈向成功的第一步。了解自己的职业目标是关键，这需要从内心深处找到动力。我的职业目标起源于：</p><ul><li><strong>兴趣和激情</strong>：我对软件工程充满热情，喜欢解决问题和创建有价值的应用程序。</li><li><strong>家庭背景</strong>：我的家庭成员在科技领域工作，这启发了我对计算机科学的兴趣。</li><li><strong>社会需求</strong>：软件工程领域正在迅速发展，社会对技术专业人才的需求持续增加。</li></ul><h3 id="1-2-职业世界探索"><a href="#1-2-职业世界探索" class="headerlink" title="1.2 职业世界探索"></a>1.2 职业世界探索</h3><p>在确定职业目标之前，我积极探索职业世界，包括：</p><ul><li><strong>实习和实践</strong>：通过实习，我获得了宝贵的实际经验，了解了行业内的工作流程和需求。</li><li><strong>导师和行业专家</strong>：寻找了导师和行业专家的指导，他们分享了关于软件工程领域的见解。</li><li><strong>行业研究</strong>：深入研究软件工程领域的趋势，了解哪些领域具有潜力。</li></ul><h3 id="1-3-适配性分析"><a href="#1-3-适配性分析" class="headerlink" title="1.3 适配性分析"></a>1.3 适配性分析</h3><p>通过自我分析，我了解到自己的优势和劣势，这有助于更好地适应所选的职业道路。适配性分析的一些关键点包括：</p><ul><li><strong>技能与能力</strong>：我拥有编程、算法设计和问题解决的技能，这使我适合从事软件工程。</li><li><strong>兴趣与价值观</strong>：我的兴趣与软件工程领域相契合，我重视创新、贡献和协作。</li><li><strong>挑战与改进</strong>：我意识到需要不断学习和发展，以跟上技术发展的速度。</li></ul><h2 id="2-成长行动"><a href="#2-成长行动" class="headerlink" title="2. 成长行动"></a>2. 成长行动</h2><h3 id="2-1-目标职业的能力要求"><a href="#2-1-目标职业的能力要求" class="headerlink" title="2.1 目标职业的能力要求"></a>2.1 目标职业的能力要求</h3><p>为了实现职业目标，我需要不断提升自己的技能和能力。根据所选择的软件工程职业道路，我需要具备以下能力：</p><ul><li><strong>编程技能</strong>：深入了解多种编程语言和开发工具，能够高效编写代码。</li><li><strong>算法和数据结构</strong>：掌握算法设计和数据结构，以解决复杂的问题。</li><li><strong>团队合作</strong>：良好的团队协作和沟通能力，能够与不同领域的专业人员合作。</li><li><strong>持续学习</strong>：保持学习的动力，随着技术的发展不断提高自己的知识和技能。</li><li><strong>创新思维</strong>：能够提出新的解决方案和创新的想法。</li><li><strong>项目管理</strong>：掌握项目管理技能，包括时间管理和资源规划。</li></ul><h3 id="2-2-提升能力的成长实践"><a href="#2-2-提升能力的成长实践" class="headerlink" title="2.2 提升能力的成长实践"></a>2.2 提升能力的成长实践</h3><p>为了提升这些关键能力，我计划采取以下成长实践：</p><ul><li><strong>学术课程</strong>：继续学习软件工程领域的相关课程，提高技术知识。</li><li><strong>个人项目</strong>：参与个人项目，应用所学知识，提高编程技能。</li><li><strong>实习和兼职</strong>：寻找实际工作机会，积累实际经验。</li><li><strong>参与开源项目</strong>：参与开源社区，与其他开发人员合作，学习最佳实践。</li><li><strong>读书和研究</strong>：不断阅读相关领域的书籍和研究，跟踪行业发展。</li><li><strong>网络和社交</strong>：积极参与技术社区和行业活动，建立专业关系。</li></ul><h2 id="3-成长计划"><a href="#3-成长计划" class="headerlink" title="3. 成长计划"></a>3. 成长计划</h2><h3 id="3-1-未来成长的行动计划"><a href="#3-1-未来成长的行动计划" class="headerlink" title="3.1 未来成长的行动计划"></a>3.1 未来成长的行动计划</h3><p>在未来的职业生涯中，我制定了以下行动计划，以不断提升自己，并实现职业目标：</p><ul><li><strong>学术发展</strong>：完成本科学位，考虑攻读硕士学位，继续深造。</li><li><strong>技能提升</strong>：持续学习新的编程语言和技术，获得相关认证。</li><li><strong>实践经验</strong>：寻找实习机会，积累项目经验，参与开源项目。</li><li><strong>社交网络</strong>：积极参与技术会议、研讨会和社交媒体平台，建立广泛的专业网络。与导师、同学、同事和行业专家建立联系，并参与开源社区。</li></ul><h3 id="3-2-计划的评估调整"><a href="#3-2-计划的评估调整" class="headerlink" title="3.2 计划的评估调整"></a>3.2 计划的评估调整</h3><p>职业生涯规划需要不断的评估和调整，以适应不断变化的环境和目标。我将采取以下措施来确保计划的有效性：</p><ul><li><strong>定期自我评估</strong>：每年回顾自己的职业目标和进展，识别需要改进的领域。</li><li><strong>与导师和顾问交流</strong>：与职业顾问或导师保持联系，获取指导和建议。</li><li><strong>参与继续教育</strong>：根据行业趋势和需求，随时更新自己的技能和知识。</li><li><strong>灵活性</strong>：在计划中保持灵活性，能够适应新机会和挑战。</li></ul><h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>这份职业生涯规划书是我的职业旅程的指南。通过明确我的职业目标、成长行动和成长计划，我将能够更有信心地前进，并不断提高自己，以实现我的梦想成为一名卓越的软件工程师。我将不断努力，适应变化，实现我的职业梦想。</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>KV数据库-文本读写以及get、del、ins等函数实现</title>
       <link href="/2023/10/08/KV%E6%95%B0%E6%8D%AE%E5%BA%93-%E6%96%87%E6%9C%AC%E8%AF%BB%E5%86%99%E4%BB%A5%E5%8F%8Aget%E3%80%81del%E3%80%81ins%E7%AD%89%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0/"/>
       <url>/2023/10/08/KV%E6%95%B0%E6%8D%AE%E5%BA%93-%E6%96%87%E6%9C%AC%E8%AF%BB%E5%86%99%E4%BB%A5%E5%8F%8Aget%E3%80%81del%E3%80%81ins%E7%AD%89%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0/</url>
